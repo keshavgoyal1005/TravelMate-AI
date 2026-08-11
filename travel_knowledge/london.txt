@@ -1,0 +1,11 @@
+LONDON TRAVEL GUIDE
+
+City: London
+Country: United Kingdom
+Description: London is the capital and largest city of both England and the United Kingdom, situated along the River Thames.
+Popular Attractions: Tower of London, Big Ben & Houses of Parliament, British Museum, London Eye, Buckingham Palace, Hyde Park, Covent Garden
+Public Transportation: Extensive transport system managed by TfL, including the London Underground (the Tube), buses, Overground trains, and river buses.
+Best Time to Visit: May to September, Late November to December
+Budget Traveler Daily Cost: 80 to 150 GBP
+Mid-Range Traveler Daily Cost: 180 to 300 GBP
+Airports: London Heathrow (LHR), London Gatwick (LGW), London Stansted (STN), London Luton (LTN)
