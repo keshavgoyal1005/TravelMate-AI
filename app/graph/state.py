@@ -22,3 +22,8 @@ class TravelState(TypedDict, total=False):
     research_retry_count: int
     research_success: bool
     fallback_used: bool
+    approval: str
+    approval_reason: str
+    rejection_reason: str
+
+    requested_changes: dict

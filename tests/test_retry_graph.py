@@ -9,6 +9,11 @@ def test_research_success_goes_directly_to_budget():
                 "Plan a 5 day trip to Paris "
                 "with a budget of 100000"
             )
+        },
+        config={
+            "configurable": {
+                "thread_id": "test-retry-graph"
+            }
         }
     )
 

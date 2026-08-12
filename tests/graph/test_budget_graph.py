@@ -7,6 +7,11 @@ def test_budget_agent_in_graph():
         {
             "user_request": "Plan a trip to Paris",
             "needs_tool": False,
+        },
+        config={
+            "configurable": {
+                "thread_id": "test-budget-graph"
+            }
         }
     )
 

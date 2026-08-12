@@ -6,6 +6,11 @@ def test_research_results_are_added_to_state():
         {
             "user_request": "Plan a trip to Paris",
             "needs_tool": False,
+        },
+        config={
+            "configurable": {
+                "thread_id": "test-research-graph"
+            }
         }
     )
 

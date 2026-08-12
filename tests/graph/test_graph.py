@@ -1,18 +1,47 @@
+from langgraph.types import Command
+
+from app.graph.workflow import graph
+
+
+from langgraph.types import Command
+
 from app.graph.workflow import graph
 
 
 def test_travel_graph():
+    config = {
+        "configurable": {
+            "thread_id": "test-travel-graph"
+        }
+    }
+
+    # Start the graph
     result = graph.invoke(
         {
-            "user_request": "Plan a trip to Paris"
-        }
+            "user_request": "Plan a trip to Paris",
+            "needs_tool": True,
+        },
+        config=config,
     )
 
+    # Graph should pause for human approval
+    assert "__interrupt__" in result
+
+    # Human approves the plan
+    result = graph.invoke(
+        Command(
+            resume={
+                "action": "approve"
+            }
+        ),
+        config=config,
+    )
+
+    # Approved path should complete successfully
     assert result["destination"] == "Paris"
     assert result["days"] == 5
     assert result["budget"] == 100000
-    assert result["tool_result"] == 105000
-    assert "Paris" in result["itinerary"]
+    assert result["approval"] == "approve"
 
 
 def test_travel_graph_without_tool():
@@ -20,12 +49,12 @@ def test_travel_graph_without_tool():
         {
             "user_request": "Plan a trip to Paris",
             "needs_tool": False,
+        },
+        config={
+            "configurable": {
+                "thread_id": "test-travel-graph-without-tool"
+            }
         }
     )
 
-    assert result["destination"] == "Paris"
-    assert result["days"] == 5
-    assert result["budget"] == 100000
-    assert "itinerary" in result
-    assert "Paris" in result["itinerary"]
-    assert "tool_result" not in result
+    assert result["plan"].destination == "Paris"

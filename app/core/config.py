@@ -6,7 +6,7 @@ class Settings(BaseSettings):
     app_env: str = "development"
     log_level: str = "INFO"
 
-    openrouter_api_key: str
+    groq_api_key: str
 
     model_config = SettingsConfigDict(
         env_file=".env",

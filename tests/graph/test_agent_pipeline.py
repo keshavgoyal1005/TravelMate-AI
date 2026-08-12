@@ -9,6 +9,11 @@ def test_full_agent_pipeline():
                 "Plan a 5 day trip to Paris "
                 "with a budget of 100000"
             )
+        },
+        config={
+            "configurable": {
+                "thread_id": "test-agent-pipeline"
+            }
         }
     )
 
