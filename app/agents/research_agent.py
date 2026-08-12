@@ -54,4 +54,6 @@ def research_agent(state: TravelState) -> TravelState:
     return {
         **state,
         "research": research,
+        "research_success": True,
+        "research_retry_count": state.get("research_retry_count", 0),
     }

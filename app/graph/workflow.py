@@ -1,15 +1,19 @@
 from langgraph.graph import StateGraph, START, END
+from langgraph.checkpoint.memory import InMemorySaver
 
 from app.agents.planner_agent import planner_agent
 from app.agents.research_agent import research_agent
+from app.agents.budget_agent import budget_agent
+from app.agents.itinerary_agent import itinerary_agent
 
-from app.graph.state import TravelState
+from app.graph.retry import retry_research, research_fallback
 
 from app.graph.nodes import (
-    tool_node,
-    finalize_node,
-    route_after_planning,
+    route_after_research,
+    route_after_budget,
 )
+
+from app.graph.state import TravelState
 
 
 builder = StateGraph(TravelState)
@@ -30,18 +34,28 @@ builder.add_node(
 )
 
 builder.add_node(
-    "tool",
-    tool_node,
+    "retry_research",
+    retry_research,
 )
 
 builder.add_node(
-    "finalize",
-    finalize_node,
+    "fallback",
+    research_fallback,
+)
+
+builder.add_node(
+    "budget",
+    budget_agent,
+)
+
+builder.add_node(
+    "itinerary",
+    itinerary_agent,
 )
 
 
 # -------------------------
-# Starting point
+# START → Planner
 # -------------------------
 
 builder.add_edge(
@@ -61,37 +75,65 @@ builder.add_edge(
 
 
 # -------------------------
-# Research routing
+# Research Routing
 # -------------------------
 
 builder.add_conditional_edges(
     "research",
-    route_after_planning,
+    route_after_research,
     {
-        "tool": "tool",
-        "finalize": "finalize",
+        "budget": "budget",
+        "retry_research": "retry_research",
+        "fallback": "fallback",
     },
 )
 
 
 # -------------------------
-# Tool → Finalize
+# Retry → Research
 # -------------------------
 
 builder.add_edge(
-    "tool",
-    "finalize",
+    "retry_research",
+    "research",
 )
 
 
 # -------------------------
-# Finalize → END
+# Fallback → Budget
 # -------------------------
 
 builder.add_edge(
-    "finalize",
+    "fallback",
+    "budget",
+)
+
+
+# -------------------------
+# Budget Routing
+# -------------------------
+
+builder.add_conditional_edges(
+    "budget",
+    route_after_budget,
+    {
+        "itinerary": "itinerary",
+    },
+)
+
+
+# -------------------------
+# Itinerary → END
+# -------------------------
+
+builder.add_edge(
+    "itinerary",
     END,
 )
 
+checkpointer = InMemorySaver()
 
-graph = builder.compile()
+
+graph = builder.compile(
+    checkpointer=checkpointer,
+)

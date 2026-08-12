@@ -1,6 +1,6 @@
 from typing import Any, TypedDict
 
-from app.llm.schemas import PlannerOutput, ResearchOutput, BudgetOutput
+from app.llm.schemas import PlannerOutput, ResearchOutput, BudgetOutput, TravelPlan
 
 
 class TravelState(TypedDict, total=False):
@@ -13,8 +13,12 @@ class TravelState(TypedDict, total=False):
     needs_tool: bool
     tool_result: Any
 
-    itinerary: str
+    itinerary: TravelPlan
 
     plan: PlannerOutput
     research: ResearchOutput
     budget_result: BudgetOutput
+
+    research_retry_count: int
+    research_success: bool
+    fallback_used: bool

@@ -56,3 +56,25 @@ def route_after_planning(state: TravelState) -> str:
         return "tool"
 
     return "finalize"
+
+
+def route_after_budget(state: TravelState) -> str:
+    budget_result = state["budget_result"]
+
+    if budget_result["within_budget"]:
+        return "itinerary"
+
+    return "itinerary"
+
+
+def route_after_research(state: TravelState) -> str:
+
+    if state.get("research_success", False):
+        return "budget"
+
+    retry_count = state.get("research_retry_count", 0)
+
+    if retry_count < 2:
+        return "retry_research"
+
+    return "fallback"
